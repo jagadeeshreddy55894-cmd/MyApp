@@ -2,178 +2,81 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>My Screenshot App — Fixed Header</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>My Screenshot App</title>
+
 <style>
-  :root{
-    --bg:#111;                 /* page background */
-    --frame-w:420px;          /* phone width for desktop preview */
-    --accent-from:#ff7a50;
-    --accent-to:#ffc342;
-    --white:#fff;
-    --shadow: 0 18px 40px rgba(0,0,0,0.45);
-    --round:18px;
-  }
-
-  /* Page reset */
-  html,body{height:100%;margin:0;background:var(--bg);-webkit-font-smoothing:antialiased}
-  body{display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; font-family:Inter, Arial, sans-serif}
-
-  /* App frame (phone-like) */
+  /* page reset */
+  html,body { height:100%; margin:0; background:#111; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+  /* center container to look like an app */
   .frame {
-    width:100%;
-    max-width:var(--frame-w);
-    height:calc(100vh - 40px);
-    background: #000;
-    border-radius:var(--round);
+    max-width:420px;          /* mobile preview width */
+    margin:18px auto;         /* center on desktop */
+    height: calc(100vh - 36px);
+    border-radius:18px;
     overflow:hidden;
-    box-shadow:var(--shadow);
-    display:flex;
-    flex-direction:column;
-    position:relative;
-  }
-
-  /* Fixed header inside the frame */
-  .app-header{
-    height:64px;
+    background:#000;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    padding:10px 14px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    backdrop-filter: blur(4px);
-    position:sticky;  /* stays at top of the scrolling area */
-    top:0;
-    z-index:50;
-  }
-  .h-left{display:flex;align-items:center;gap:12px}
-  .hamb {
-    width:42px; height:42px; border-radius:10px;
-    display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
-    color:var(--white); font-weight:700; cursor:pointer;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  }
-  .title { font-size:18px; font-weight:700; color:#fff; letter-spacing:0.2px; text-align:center; flex:1 }
-  .h-right{display:flex;align-items:center;gap:10px}
-  .icon-btn{
-    width:42px; height:42px; border-radius:10px; background:#fff; display:flex;align-items:center;justify-content:center;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.18); cursor:pointer;
-  }
-  .dots {
-    width:36px; height:36px; border-radius:8px; display:flex;align-items:center;justify-content:center; cursor:pointer;
-    background: rgba(255,255,255,0.06); color:#fff;
-  }
-
-  /* Scrollable content area below the header */
-  .content {
-    flex:1;
-    overflow:auto;            /* scroll here; header remains sticky */
-    -webkit-overflow-scrolling: touch;
-    background: #000;         /* black to match phone look */
-    display:flex;
-    align-items:flex-start;
     justify-content:center;
-    padding: 12px 12px 24px;
   }
 
-  /* Center container inside content to hold screenshot */
-  .inner {
-    width:100%;
-    max-width:100%;
-    display:flex;
-    align-items:flex-start;
-    justify-content:center;
-    /* allow taller screenshots to scroll vertically inside the content */
-  }
-
-  /* Screenshot image: preserve aspect ratio, no upscaling beyond container width */
-  img.screenshot {
-    width:100%;
-    height:auto;
-    max-width:390px;   /* slight inner padding from frame edges */
-    max-height: calc(100vh - 160px); /* allow header + margins */
-    object-fit:contain;
+  /* screenshot image rules:
+     - never upscale beyond its container width
+     - maintain aspect ratio
+     - fit inside viewport without cropping
+  */
+  .screenshot {
     display:block;
-    border-radius:12px;
-    -webkit-user-drag: none;
-    user-select: none;
+    width:100%;           /* fit container width */
+    height:auto;          /* preserve ratio */
+    max-height:100%;      /* do not exceed container height */
+    object-fit:contain;   /* preserve, don't crop */
+    -webkit-user-select:none;
+    user-select:none;
+    -webkit-touch-callout:none;
+    -webkit-user-drag:none;
+    image-rendering: -webkit-optimize-contrast; /* improve look on some browsers */
   }
 
-  /* optional full-screen fallback if you want screenshot to occupy full frame on mobile */
+  /* remove default focus outlines when tapping */
+  img:focus { outline: none; }
+
+  /* If you want the app to occupy entire viewport (no centered frame),
+     remove/comment .frame max-width + margins and set width:100%,height:100%. */
   @media (max-width:480px) {
-    .frame { border-radius:0; height:100vh; max-width:100vw }
-    img.screenshot { max-width:100%; max-height:calc(100vh - 84px); border-radius:0 }
+    .frame { margin:0; border-radius:0; height:100vh; max-width:100vw; }
+    .screenshot { width:100vw; max-height:100vh; }
   }
-
-  /* hide native scrollbar visuals but keep scrolling */
-  .content::-webkit-scrollbar{width:8px}
-  .content::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:8px}
-  .content::-webkit-scrollbar-track{background:transparent}
-
-  /* Make icons visually accessible */
-  .icon-btn svg, .hamb svg { display:block }
 </style>
 </head>
+
 <body>
-
-<div class="frame" role="application" aria-label="App frame">
-  <!-- fixed header (sticky) -->
-  <div class="app-header" role="banner">
-    <div class="h-left">
-      <div class="hamb" id="menuBtn" title="Menu">
-        <!-- 3 bars icon (white) -->
-        <svg width="18" height="14" viewBox="0 0 18 14" xmlns="http://www.w3.org/2000/svg"><rect width="18" height="2" rx="1" fill="white"/><rect y="6" width="18" height="2" rx="1" fill="white"/><rect y="12" width="18" height="2" rx="1" fill="white"/></svg>
-      </div>
-    </div>
-
-    <div class="title" aria-hidden="true">Dashboard</div>
-
-    <div class="h-right">
-      <div class="icon-btn" id="notifBtn" title="Notifications" aria-label="notifications">
-        <!-- bell SVG -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2z" fill="#222"/><path d="M18 16v-5c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 1 0-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#222"/></svg>
-      </div>
-
-      <div class="dots" id="moreBtn" title="More options" aria-label="more">
-        <!-- vertical dots -->
-        <svg width="4" height="16" viewBox="0 0 4 16" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="#fff"/><circle cx="2" cy="8" r="2" fill="#fff"/><circle cx="2" cy="14" r="2" fill="#fff"/></svg>
-      </div>
-    </div>
+  <!-- Put your screenshot file name here -->
+  <div class="frame" role="main" aria-label="Screenshot preview">
+    <img src="dashboard.png" alt="App screenshot" class="screenshot" draggable="false" />
   </div>
 
-  <!-- scrollable content area -->
-  <div class="content" role="main" aria-live="polite">
-    <div class="inner">
-      <!-- Replace file name below if different (e.g., lputouch.png) -->
-      <img class="screenshot" src="dashboard.png" alt="App screenshot" onerror="imgMissing()" draggable="false">
-    </div>
+  <script>
+    // Prevent double-tap zoom on some mobile browsers
+    let lastTouch = 0;
+    document.addEventListener('touchend', function(e){
+      const now = Date.now();
+      if (now - lastTouch <= 300) {
+        e.preventDefault(); // stop double-tap zoom
+      }
+      lastTouch = now;
+    }, {passive:false});
 
-    <!-- you can add more content below the image if you want to test vertical scrolling -->
-    <div style="width:100%; max-width:390px; color:#fff; font-size:14px; margin-top:18px; line-height:1.35; display:none">
-      <!-- placeholder text (hidden by default) -->
-    </div>
-  </div>
-</div>
-
-<script>
-  // helpful error message if image missing
-  function imgMissing(){
-    const inner = document.querySelector('.inner');
-    inner.innerHTML = '<div style="color:#fff;padding:24px;text-align:center">Image not found.<br>Put <strong>dashboard.png</strong> in the same folder as this file.</div>';
-  }
-
-  // optional demo click handlers (remove alerts later)
-  document.getElementById('menuBtn').addEventListener('click', ()=> {
-    // you can open a drawer or switch images here
-    alert('Menu tapped — implement drawer or navigation here.');
-  });
-  document.getElementById('notifBtn').addEventListener('click', ()=> {
-    alert('Notifications tapped.');
-  });
-  document.getElementById('moreBtn').addEventListener('click', ()=> {
-    alert('More options tapped.');
-  });
-</script>
+    // If image fails to load, show a helpful message
+    const img = document.querySelector('.screenshot');
+    img.addEventListener('error', () => {
+      document.querySelector('.frame').innerHTML = 
+        '<div style="color:#fff;text-align:center;padding:20px;font-family:Arial,sans-serif">' +
+        'Image not found.<br>Please put <strong>dashboard.png</strong> in the same folder as this HTML file.' +
+        '</div>';
+    });
+  </script>
 </body>
 </html>
