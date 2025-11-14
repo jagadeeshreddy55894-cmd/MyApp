@@ -1,0 +1,12 @@
+{
+  "name": "My Offline App",
+  "short_name": "MyApp",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FF7A5C",
+  "icons": [
+    { "src": "Picture1.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "133550302836046351.jpg", "sizes": "512x512", "type": "image/png" }
+  ]
+}
