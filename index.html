@@ -1,101 +1,326 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>My Offline App</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Dashboard — MyApp</title>
+<style>
+  :root{
+    --bg:#fbf6f3;
+    --card:#fff;
+    --muted:#7b7b7b;
+    --accent1: linear-gradient(135deg,#ffb57a,#ff7b8b);
+    --accent2: linear-gradient(135deg,#ffb57a 0%, #ff8b6b 40%, #ffb57a 100%);
+    --tileShadow: 0 6px 18px rgba(20,20,20,0.06);
+    --round:16px;
+    --nav-h:72px;
+    --safe-bottom: env(safe-area-inset-bottom, 12px);
+  }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+  *{box-sizing:border-box}
 
-  <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.json">
+  /* Header */
+  .header{
+    height:64px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 16px;
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+    position:sticky; top:0; z-index:40;
+  }
+  .hamburger{
+    width:36px;height:36px;border-radius:10px; display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,250,1));
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+    cursor:pointer;
+  }
+  .title{font-weight:600;font-size:20px;margin-left:4px;}
+  .header-right{margin-left:auto; display:flex; gap:12px; align-items:center;}
+  .bell{
+    width:36px;height:36px;border-radius:10px; display:flex;align-items:center;justify-content:center;background:#fff; box-shadow: 0 6px 20px rgba(0,0,0,0.06); position:relative;
+  }
+  .badgeSmall{ position:absolute; right:-6px; top:-6px; background:#ff8a66; color:#fff; font-size:12px; padding:3px 6px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.08);}
 
-  <!-- theme color for status bar -->
-  <meta name="theme-color" content="#FF7A5C">
+  /* Page content */
+  .container{padding:18px; padding-bottom: calc(var(--nav-h) + 24px + var(--safe-bottom));}
 
-  <style>
-    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#f6f4f2}
-    .top{height:60px;background:#fff;display:flex;align-items:center;padding:0 14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-    .hamb{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer}
-    .title{font-weight:700;margin-left:10px;font-size:18px}
-    .main{padding:16px}
-    .card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-    .big{font-size:20px;font-weight:700}
-    /* full-screen menu overlay (example) */
-    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:999}
-    .menu{position:fixed;left:0;top:0;width:100%;height:100%;background:#fff;z-index:1000;transform:translateX(-100%);transition:transform .28s}
-    .menu.open{transform:translateX(0)}
-    .menu-header{padding:28px;background:linear-gradient(90deg,#FF7A5C,#FFD78D);text-align:center;color:#111}
-    .menu-list{padding:12px;overflow:auto;height:calc(100% - 180px)}
-    .item{padding:14px;border-radius:10px;margin:8px;background:#fff;display:flex;align-items:center;gap:10px;cursor:pointer}
-    .footer{position:absolute;left:0;right:0;bottom:0;padding:14px}
-    .logout{width:100%;padding:12px;border:0;border-radius:12px;background:linear-gradient(90deg,#FF7A5C,#FFD78D);font-weight:700}
-  </style>
+  /* Today's timetable */
+  .section-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;}
+  .section-head h2{margin:0; font-size:20px;}
+  .pill{background:linear-gradient(90deg,#ffb98a,#ff8b6b); padding:6px 12px; border-radius:12px; color:#fff; font-weight:600; font-size:14px;}
+
+  /* horizontal cards */
+  .cards-row{display:flex; gap:12px; overflow:auto; padding:10px 2px 16px;}
+  .card{
+    min-width:260px; flex:0 0 auto; border-radius:12px; box-shadow:var(--tileShadow); overflow:hidden; position:relative; background:var(--card);
+  }
+  .card .grad{
+    height:140px; padding:16px; color:#111; display:flex;flex-direction:column; justify-content:space-between; background: var(--accent1);
+  }
+  .card h3{margin:0;font-size:20px; font-weight:700;}
+  .card p{margin:0;color:rgba(0,0,0,0.55); font-size:13px;}
+  .card .ftime{height:36px; background:#262626; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; letter-spacing:0.5px;}
+
+  /* Add More Tiles heading */
+  .section-title{margin-top:6px; margin-bottom:6px; font-size:18px; font-weight:600;}
+  .section-sub{color:var(--muted); margin-bottom:12px;}
+
+  /* Tiles grid */
+  .tiles{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:14px;
+  }
+  .tile{
+    background: linear-gradient(180deg,#fff,#fff); border-radius:14px; padding:14px; text-align:center; box-shadow:var(--tileShadow); position:relative;
+    min-height:120px; display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+  }
+  .tile .icon{
+    width:64px; height:64px; background:linear-gradient(180deg,#fff,#fff); border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow: 0 6px 14px rgba(0,0,0,0.04);
+  }
+  .tile .label{ background:linear-gradient(90deg,#ffdcbf,#ffefdd); padding:8px 10px; border-radius:8px; margin-top:8px; font-weight:600; color:#4b2b1b; }
+  .badge{
+    position:absolute; left:12px; top:8px; background: #ffb78b; color:#fff; padding:4px 7px; border-radius:8px; font-weight:700; font-size:12px; box-shadow:0 6px 12px rgba(0,0,0,0.08);
+  }
+
+  /* floating plus */
+  .fab{
+    position:fixed; right:20px; bottom: calc(var(--nav-h) + 36px); width:48px;height:48px;border-radius:50%;background:#111; color:#fff; display:flex;align-items:center;justify-content:center; box-shadow:0 12px 30px rgba(0,0,0,0.18);
+    z-index:60;
+  }
+
+  /* bottom navigation */
+  .bottom-nav{
+    height:var(--nav-h);
+    background: #fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+    position:fixed; left:0; right:0; bottom:0; box-shadow: 0 -6px 30px rgba(0,0,0,0.06); z-index:50;
+    padding-bottom: env(safe-area-inset-bottom, 6px);
+  }
+  .nav-item{display:flex;flex-direction:column;align-items:center; gap:6px; color:#b89a7c; font-weight:600; font-size:12px; text-decoration:none;}
+  .nav-item.active{ color:#ff8b6b; }
+
+  /* responsive tweaks */
+  @media(min-width:720px){
+    .container{max-width:720px;margin:0 auto;}
+  }
+</style>
 </head>
 <body>
 
-<div class="top">
-  <div class="hamb" id="hamb" title="menu">
-    <!-- 3 bars -->
-    <svg width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="2" fill="#111"/><rect x="3" y="11" width="18" height="2" fill="#111"/><rect x="3" y="16" width="18" height="2" fill="#111"/></svg>
-  </div>
-  <div class="title">Dashboard</div>
-</div>
-
-<div class="main">
-  <div class="card">
-    <div class="big">Today's Timetable</div>
-    <p style="color:#666;margin-top:8px">This is offline HTML content. Use Notepad to edit text, images, layout.</p>
-  </div>
-  <div style="height:12px"></div>
-  <div class="card">
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
-      <div style="padding:12px;background:#fff;border-radius:10px">Announce</div>
-      <div style="padding:12px;background:#fff;border-radius:10px">Edu Revolution</div>
-      <div style="padding:12px;background:#fff;border-radius:10px">Fee Statement</div>
-      <div style="padding:12px;background:#fff;border-radius:10px">Attendance</div>
+  <header class="header">
+    <div class="hamburger" id="menuBtn" title="Menu">
+      <!-- three bars -->
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="18" height="2" rx="1" fill="#ff7b8b"/><rect y="6" width="18" height="2" rx="1" fill="#f6b07f"/><rect y="12" width="18" height="2" rx="1" fill="#ffd6b8"/></svg>
     </div>
-  </div>
-</div>
 
-<!-- overlay + full-screen menu -->
-<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+    <div class="title">Dashboard</div>
 
-<div class="menu" id="menu">
-  <div class="menu-header">
-    <div style="font-weight:800">Mallidi Gana Jagadeesh Reddy</div>
-    <div style="opacity:.9;margin-top:6px">12311248</div>
-  </div>
+    <div class="header-right">
+      <div style="font-size:14px;color:#777"> </div>
+      <div class="bell" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zM18 16v-5c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 1 0-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#444"/></svg>
+        <div class="badgeSmall">34</div>
+      </div>
+    </div>
+  </header>
 
-  <div class="menu-list">
-    <div class="item" onclick="menuClick('Alumni Mentor Selection')">🧑‍🏫 Alumni Mentor Selection</div>
-    <div class="item" onclick="menuClick('Assignment (CA)')">📝 Assignment (CA)</div>
-    <div class="item" onclick="menuClick('Backlog Registration')">📋 Backlog Registration</div>
-    <div class="item" onclick="menuClick('Book Appointment')">📅 Book Appointment</div>
-    <div class="item" onclick="menuClick('Change UMS Password')">🔒 Change UMS Password</div>
-    <div class="item" onclick="menuClick('Doctor Appointment')">🩺 Doctor Appointment</div>
-    <div style="height:80px"></div>
-  </div>
+  <main class="container">
 
-  <div class="footer">
-    <button class="logout" onclick="menuClick('Logout')">LOGOUT ↪</button>
-  </div>
-</div>
+    <section aria-label="timetable">
+      <div class="section-head">
+        <h2>Today's Timetable</h2>
+        <div class="pill">Your Dost</div>
+      </div>
+
+      <div class="cards-row" role="list">
+        <article class="card" role="listitem">
+          <div class="grad" style="background: linear-gradient(135deg,#ffb57a,#ff8b6b);">
+            <div>
+              <h3>INT423</h3>
+              <p>37-808</p>
+            </div>
+            <div style="opacity:0.15; align-self:flex-end;">
+              <!-- shadow book icon small (decorative) -->
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none"><path d="M4 6h12v12H4z" fill="#fff"/></svg>
+            </div>
+          </div>
+          <div class="ftime">10-11 AM</div>
+        </article>
+
+        <article class="card" role="listitem">
+          <div class="grad" style="background: linear-gradient(135deg,#ffb57a,#ff7b94);">
+            <div>
+              <h3>INT423</h3>
+              <p>37-808</p>
+            </div>
+          </div>
+          <div class="ftime">11-12 AM</div>
+        </article>
+
+        <article class="card" role="listitem">
+          <div class="grad" style="background: linear-gradient(135deg,#ffb57a,#ff9c6b);">
+            <div>
+              <h3>INT423</h3>
+              <p>37-808</p>
+            </div>
+          </div>
+          <div class="ftime">01-02 PM</div>
+        </article>
+      </div>
+    </section>
+
+    <section aria-label="tiles">
+      <div class="section-title">Add More Tiles</div>
+      <div class="section-sub">Click on the plus button to add menu grids.</div>
+
+      <div class="tiles">
+        <div class="tile" role="button" onclick="tileClick('Announce')">
+          <div class="badge">24</div>
+          <div class="icon">
+            <!-- megaphone -->
+            <svg width="36" height="36" viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="#f6b07f"/></svg>
+          </div>
+          <div class="label">Announce</div>
+        </div>
+
+        <div class="tile" role="button" onclick="tileClick('Edu Revolution')">
+          <div class="icon">
+            <!-- laptop grad -->
+            <svg width="36" height="36" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="10" rx="2" fill="#fff"/><path d="M2 19h20v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z" fill="#ffd6b8"/></svg>
+          </div>
+          <div class="label">Edu Revolution</div>
+        </div>
+
+        <div class="tile" role="button" onclick="tileClick('Fee Statement')">
+          <div class="icon">
+            <svg width="36" height="36" viewBox="0 0 24 24"><path d="M4 7h16v10H4z" fill="#fff"/><path d="M6 9h12v2H6z" fill="#ffd6b8"/></svg>
+          </div>
+          <div class="label">Fee Statement</div>
+        </div>
+
+        <div class="tile" role="button" onclick="tileClick('Attendance')">
+          <div class="badge">90%</div>
+          <div class="icon"><svg width="36" height="36" viewBox="0 0 24 24"><circle cx="12" cy="8" r="2.4" fill="#fff"/></svg></div>
+          <div class="label">Attendance</div>
+        </div>
+
+        <div class="tile" role="button" onclick="tileClick('Assignment')">
+          <div class="badge">8</div>
+          <div class="icon"><svg width="36" height="36" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="14" rx="2" fill="#fff"/></svg></div>
+          <div class="label">Assignment</div>
+        </div>
+
+        <div class="tile" role="button" onclick="tileClick('Results')">
+          <div class="badge">6.80</div>
+          <div class="icon"><svg width="36" height="36" viewBox="0 0 24 24"><path d="M4 6h16v12H4z" fill="#fff"/></svg></div>
+          <div class="label">Results</div>
+        </div>
+
+        <!-- additional blank tiles for layout -->
+        <div class="tile" role="button" onclick="tileClick('Exam')">
+          <div class="badge">3</div>
+          <div class="icon"><svg width="36" height="36" viewBox="0 0 24 24"><path d="M4 4h16v12H4z" fill="#fff"/></svg></div>
+          <div class="label">Exam</div>
+        </div>
+
+        <div class="tile" role="button" onclick="tileClick('Calendar')">
+          <div class="icon"><svg width="36" height="36" viewBox="0 0 24 24"><path d="M3 8h18v12H3z" fill="#fff"/></svg></div>
+          <div class="label">Calendar</div>
+        </div>
+
+        <div class="tile" role="button" onclick="tileClick('More')">
+          <div class="icon"><svg width="36" height="36" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.6" fill="#fff"/><circle cx="12" cy="12" r="1.6" fill="#fff"/><circle cx="18.5" cy="12" r="1.6" fill="#fff"/></svg></div>
+          <div class="label">More</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <button class="fab" title="add" onclick="alert('Add button pressed')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z" fill="#fff"/></svg>
+  </button>
+
+  <nav class="bottom-nav" role="navigation">
+    <a class="nav-item active" href="#" onclick="navClick(event,'dash')">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z" fill="#ff8b6b"/></svg>
+      <div>Dashboard</div>
+    </a>
+    <a class="nav-item" href="#" onclick="navClick(event,'happ')">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z" fill="#b89a7c"/></svg>
+      <div>Happenings</div>
+    </a>
+    <a class="nav-item" href="#" onclick="navClick(event,'rms')">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M4 4h16v12H4zM6 16h12v2H6z" fill="#b89a7c"/></svg>
+      <div>RMS</div>
+    </a>
+    <a class="nav-item" href="#" onclick="navClick(event,'quiz')">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M8 2h8v4H8zM3 8h18v14H3z" fill="#b89a7c"/></svg>
+      <div>Quick Quiz</div>
+    </a>
+  </nav>
 
 <script>
-  // ... keep the SW registration above unchanged
-
-  const menu = document.getElementById('menu');
-  const overlay = document.getElementById('overlay');
-  document.getElementById('hamb').addEventListener('click', openMenu);
-  function openMenu(){ menu.classList.add('open'); overlay.style.display='block'; }
-  function closeMenu(){ menu.classList.remove('open'); overlay.style.display='none'; }
-
-  // replaced: no alert anymore
-  function menuClick(name){
-    closeMenu();
-    // no alert — silent
+  function tileClick(name){
+    // replace this with real navigation later
+    console.log('tile clicked',name);
+    // quick visual: show a toast-like message (native dialog avoided on mobile)
+    const toast = document.createElement('div');
+    toast.textContent = name;
+    toast.style.position='fixed';
+    toast.style.left='50%';
+    toast.style.top='50%';
+    toast.style.transform='translate(-50%,-50%)';
+    toast.style.background='rgba(0,0,0,0.75)';
+    toast.style.color='#fff';
+    toast.style.padding='14px 18px';
+    toast.style.borderRadius='12px';
+    toast.style.zIndex=9999;
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(),900);
   }
-</script>
 
+  function navClick(ev, key){
+    ev.preventDefault();
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    ev.currentTarget.classList.add('active');
+    // optionally scroll to top or change content
+    if(key==='dash'){
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      // for demo, show small temporary message
+      tileClick(key);
+    }
+  }
+
+  // menu open demo
+  document.getElementById('menuBtn').addEventListener('click', () => {
+    // you can implement side drawer. For now show a compact menu action (demo)
+    const overlay = document.createElement('div');
+    overlay.style.position='fixed';
+    overlay.style.inset='0';
+    overlay.style.background='rgba(0,0,0,0.45)';
+    overlay.style.zIndex=9998;
+    overlay.addEventListener('click', ()=>overlay.remove());
+    const panel = document.createElement('div');
+    panel.style.width='280px';
+    panel.style.height='100%';
+    panel.style.background='#fff';
+    panel.style.padding='18px';
+    panel.style.boxShadow='0 20px 60px rgba(0,0,0,0.25)';
+    panel.innerHTML = '<h3 style="margin:0 0 12px 0">Menu</h3><button style="display:block;margin:8px 0;padding:10px;border-radius:8px">Profile</button><button style="display:block;margin:8px 0;padding:10px;border-radius:8px">Settings</button><button style="display:block;margin:8px 0;padding:10px;border-radius:8px">Logout</button>';
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+  });
+
+  // optional: disable long-press menu on mobile
+  window.addEventListener('contextmenu', e=> e.preventDefault());
+
+</script>
 </body>
 </html>
-
