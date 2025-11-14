@@ -1,279 +1,193 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MyFirstApp Preview</title>
-  <style>
-    :root{
-      --accent1: #ff8a6b;
-      --accent2: #ffd27a;
-      --bg: #f5efec;
-      --card: #fff;
-      --dark: #222;
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Dashboard</title>
+
+<style>
+    :root {
+        --accent1: #ff8a6b;
+        --accent2: #ffd27a;
+        --bg: #f6f2ef;
+        --dark: #222;
     }
 
-    html,body{
-      margin:0;
-      height:100%;
-      background:var(--bg);
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      -webkit-font-smoothing:antialiased;
-      -webkit-text-size-adjust:100%;
-      overflow:hidden; /* we control scrolling inside containers */
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        overflow: hidden;  /* prevent full page scroll */
     }
 
-    /* fixed header */
-    .topbar{
-      position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      height:60px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:8px 16px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96));
-      box-shadow:0 2px 6px rgba(0,0,0,0.08);
-      z-index:30;
-      border-bottom-left-radius:6px;
-      border-bottom-right-radius:6px;
+    /* ★★ FIXED TOPBAR (more realistic, like your screenshot) */
+    .topbar {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 65px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 20;
     }
-    .top-left, .top-center, .top-right{display:flex;align-items:center;}
-    .menu-btn{
-      width:36px;height:36px;border-radius:8px;
-      background:linear-gradient(90deg,var(--accent1),var(--accent2));
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 6px 14px rgba(0,0,0,0.12);
-      cursor:pointer;
+
+    /* Hamburger */
+    .menu-btn {
+        width: 34px; height: 34px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, var(--accent1), var(--accent2));
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
     }
-    .menu-btn .bars{
-      width:18px;height:12px;position:relative;
+
+    .menu-btn .bars {
+        width: 18px;
+        height: 14px;
+        position: relative;
     }
     .menu-btn .bars:before,
-    .menu-btn .bars:after,
-    .menu-btn .bars div{
-      content:"";display:block;height:2px;background:white;border-radius:2px;
-      position:absolute;left:0;right:0;
+    .menu-btn .bars div,
+    .menu-btn .bars:after{
+        content:""; 
+        height: 2px;
+        background: white;
+        border-radius: 2px;
+        position: absolute;
+        left:0; right:0;
     }
-    .menu-btn .bars div{top:5px}
-    .menu-btn .bars:before{top:0}
-    .menu-btn .bars:after{bottom:0}
+    .menu-btn .bars:before{ top:0; }
+    .menu-btn .bars div{ top:6px; }
+    .menu-btn .bars:after{ bottom:0; }
 
-    .title{
-      font-weight:700;color:var(--dark);font-size:20px;
-    }
-
-    .notif{
-      width:36px;height:36px;border-radius:8px;background:#fff;
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 6px 14px rgba(0,0,0,0.06);
-      position:relative;
-    }
-    .notif .dot{
-      position:absolute;top:-6px;right:-6px;background:linear-gradient(90deg,var(--accent1),var(--accent2));
-      color:white;font-size:11px;padding:2px 6px;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,0.12);
+    .title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
     }
 
-    /* overall layout: header, content area, bottom nav */
-    .frame{
-      position:absolute;
-      top:60px; /* below header */
-      bottom:64px; /* above bottom nav */
-      left:0; right:0;
-      overflow:auto;
-      -webkit-overflow-scrolling:touch;
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      padding:18px;
+    /* ★★ Realistic Notification Bell */
+    .notif {
+        position: relative;
+        width: 34px;
+        height: 34px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
     }
 
-    /* main image container - center content and keep correct aspect */
-    .main-wrap{
-      width:100%;
-      max-width:760px; /* desktop width look */
-      min-width:320px;
-      background:transparent;
-      display:block;
-    }
-    .screenshot{
-      width:100%;
-      height: auto;
-      display:block;
-      border-radius:12px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-      border:1px solid rgba(0,0,0,0.02);
-      object-fit:cover;
+    .notif img {
+        width: 28px;
+        filter: brightness(0) saturate(0) invert(25%);
     }
 
-    /* slide panel for menu image (appears below header, overlay style) */
-    .menu-panel{
-      position:fixed;
-      top:60px;
-      left:10px;
-      width:calc(100% - 20px);
-      max-width:760px;
-      height:calc(100% - 60px - 64px);
-      background:transparent;
-      z-index:25;
-      display:flex;
-      justify-content:center;
-      pointer-events:none; /* until visible */
-    }
-    .menu-panel .inner{
-      width:100%;
-      height:100%;
-      background: linear-gradient(180deg,#fff, #fff);
-      border-radius:12px;
-      overflow:auto;
-      padding:20px;
-      box-shadow:0 20px 50px rgba(0,0,0,0.12);
-      transform:translateY(-20px);
-      opacity:0;
-      transition:all .32s ease;
-      pointer-events:auto;
-    }
-    .menu-panel.show .inner{
-      transform:none;
-      opacity:1;
-    }
-    .menu-image{
-      width:100%;
-      height:auto;
-      border-radius:10px;
-      object-fit:contain;
-      background:#fff;
-      display:block;
+    .notif-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: linear-gradient(90deg, var(--accent1), var(--accent2));
+        color: white;
+        padding: 2px 7px;
+        font-size: 12px;
+        border-radius: 12px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    /* bottom nav fixed */
-    .bottom-nav{
-      position:fixed;
-      left:0;right:0;bottom:0;
-      height:64px;
-      background:transparent;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:30;
-      pointer-events:none;
-    }
-    .bottom-inner{
-      width:100%;
-      max-width:760px;
-      background:var(--card);
-      height:56px;
-      border-radius:30px;
-      display:flex;
-      align-items:center;
-      justify-content:space-around;
-      box-shadow:0 8px 28px rgba(0,0,0,0.08);
-      pointer-events:auto;
-    }
-    .nav-item{display:flex;flex-direction:column;align-items:center;font-size:12px;color:#b86d4e;text-decoration:none;padding:6px 8px;}
-    .nav-item .icon{width:22px;height:22px;margin-bottom:4px;background:linear-gradient(90deg,var(--accent1),var(--accent2));border-radius:6px;}
-
-    /* small responsive tweaks */
-    @media (max-width:420px){
-      .topbar{height:58px;padding:6px 12px}
-      .title{font-size:18px}
-      .menu-btn{width:34px;height:34px}
-      .frame{padding:12px}
-      .bottom-inner{height:56px;border-radius:28px}
+    /* Main scrollable area without zoom */
+    .frame {
+        position: absolute;
+        top: 65px;
+        bottom: 0;
+        left: 0; right: 0;
+        overflow-y: auto;
+        padding: 10px;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        justify-content: center;
     }
 
-    /* hide default big scrollbars on some browsers by setting overflow: auto on the main container */
-    /* leave browser default for accessibility */
-  </style>
+    /* Screenshot EXACT size — NO ZOOMING */
+    .screenshot {
+        width: 100%;
+        height: auto;
+        object-fit: contain; /* no crop, no zoom */
+        max-width: 500px;  /* looks good on phones */
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    /* Hidden menu panel */
+    .menu-panel {
+        position: fixed;
+        top: 65px;
+        left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.25);
+        display: none;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 20px;
+        z-index: 15;
+    }
+
+    .menu-panel img {
+        width: 95%;
+        max-width: 500px;
+        border-radius: 12px;
+        object-fit: contain;
+        background: #fff;
+    }
+</style>
 </head>
+
 <body>
 
-  <!-- TOP BAR (fixed) -->
-  <div class="topbar" aria-hidden="false">
-    <div class="top-left">
-      <div class="menu-btn" id="menuBtn" title="Open menu">
-        <div class="bars"><div></div></div>
-      </div>
+    <!-- TOP FIXED BAR -->
+    <div class="topbar">
+        <div class="menu-btn" id="menuBtn">
+            <div class="bars"><div></div></div>
+        </div>
+
+        <div class="title">Dashboard</div>
+
+        <div class="notif">
+            <img src="https://cdn-icons-png.flaticon.com/512/3602/3602145.png">
+            <div class="notif-badge">2</div>
+        </div>
     </div>
 
-    <div class="top-center">
-      <div class="title">Dashboard</div>
+    <!-- POPUP MENU (your second screenshot) -->
+    <div class="menu-panel" id="menuPanel">
+        <img src="menu.png" alt="Menu Image">
     </div>
 
-    <div class="top-right">
-      <div class="notif" title="Notifications">
-        <!-- simple bell icon (SVG) -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:0.95">
-          <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118.5 14.5V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C8.67 6.165 8 7.468 8 9v5.5c0 .596-.237 1.165-.595 1.595L6 17h9z" stroke="#333" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-        <div class="dot">2</div>
-      </div>
+    <!-- MAIN CONTENT (your first screenshot) -->
+    <div class="frame">
+        <img src="lputouch.png" class="screenshot">
     </div>
-  </div>
-
-  <!-- menu panel that will show second screenshot -->
-  <div class="menu-panel" id="menuPanel" aria-hidden="true">
-    <div class="inner" role="dialog" aria-modal="true">
-      <!-- If you have a real HTML menu, you can replace this <img> with actual HTML markup -->
-      <img src="menu.png" alt="Menu screenshot" class="menu-image" id="menuImg">
-    </div>
-  </div>
-
-  <!-- main content area -->
-  <div class="frame" id="frame">
-    <div class="main-wrap" id="mainWrap">
-      <!-- The primary screenshot image (your file: lputouch.png) -->
-      <img src="lputouch.png" alt="App Screenshot" class="screenshot" id="mainScreenshot">
-    </div>
-  </div>
-
-  <!-- Bottom nav -->
-  <div class="bottom-nav" role="navigation" aria-label="Bottom navigation">
-    <div class="bottom-inner">
-      <a class="nav-item" href="#"><div class="icon"></div>Dashboard</a>
-      <a class="nav-item" href="#"><div class="icon"></div>Happenings</a>
-      <a class="nav-item" href="#"><div class="icon"></div>RMS</a>
-      <a class="nav-item" href="#"><div class="icon"></div>Quick Quiz</a>
-    </div>
-  </div>
 
 <script>
-  // toggle menu panel
-  const menuBtn = document.getElementById('menuBtn');
-  const menuPanel = document.getElementById('menuPanel');
-  const frame = document.getElementById('frame');
+    // Toggle menu panel
+    const menuBtn = document.getElementById("menuBtn");
+    const panel = document.getElementById("menuPanel");
 
-  menuBtn.addEventListener('click', () => {
-    const shown = menuPanel.classList.toggle('show');
-    menuPanel.setAttribute('aria-hidden', !shown);
-    // when menu open, lock main scrolling, otherwise allow
-    if (shown) {
-      frame.style.overflow = 'hidden';
-    } else {
-      frame.style.overflow = 'auto';
-    }
-  });
+    menuBtn.onclick = () => {
+        panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+    };
 
-  // prevent pinch-zoom mobile (optional) --- we keep normal browser zoom allowed for accessibility
-  // We ensure the main screenshot fits by CSS - don't force device zoom changes.
-
-  // if an image fails to load, show helpful message in console
-  const mainImg = document.getElementById('mainScreenshot');
-  mainImg.addEventListener('error', ()=> {
-    console.warn('Failed to load lputouch.png. Make sure it is in the same folder as index.html and spelled exactly lputouch.png (case-sensitive on some servers).');
-    mainImg.style.background = '#000';
-    mainImg.style.height = '400px';
-    mainImg.alt = 'Image not found: lputouch.png';
-  });
-
-  const menuImg = document.getElementById('menuImg');
-  menuImg.addEventListener('error', ()=> {
-    console.warn('Failed to load menu.png. Make sure it is in the same folder as index.html and spelled exactly menu.png (case-sensitive on some servers).');
-  });
-
-  // Make header and bottom always fixed on small screens too (handled by CSS).
+    // Clicking outside closes it
+    panel.onclick = (e) => {
+        if (e.target === panel) panel.style.display = "none";
+    };
 </script>
 
 </body>
