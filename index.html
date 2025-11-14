@@ -81,17 +81,21 @@
 </div>
 
 <script>
-  // register service worker (if available)
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(e => console.log('SW failed', e));
-  }
+  // ... keep the SW registration above unchanged
 
   const menu = document.getElementById('menu');
   const overlay = document.getElementById('overlay');
   document.getElementById('hamb').addEventListener('click', openMenu);
   function openMenu(){ menu.classList.add('open'); overlay.style.display='block'; }
   function closeMenu(){ menu.classList.remove('open'); overlay.style.display='none'; }
-  function menuClick(name){ closeMenu(); alert(name); /* replace alert with actions (navigate, etc.) */ }
+
+  // replaced: no alert anymore
+  function menuClick(name){
+    closeMenu();
+    // no alert — silent
+  }
 </script>
+
 </body>
 </html>
+
