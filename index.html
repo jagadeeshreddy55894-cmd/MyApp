@@ -1,108 +1,605 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MyApp — screenshot preview</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard</title>
 <style>
-  :root{
-    --bg:#f2efeC;
-    --phone-bg:#ffffff;
-    --frame-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+  * {
+    box-sizing: border-box;
   }
-  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
-  body{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(180deg,#f2efeC 0%, #efe9e5 100%);
-    padding:28px;
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #fff9f5;
+    color: #222;
   }
-
-  /* phone container */
-  .phone {
-    width:360px;            /* phone viewport width */
-    max-width:92vw;        /* shrink on small screens */
-    border-radius:28px;
-    overflow:hidden;
-    background:var(--phone-bg);
-    box-shadow: var(--frame-shadow);
-    border: 10px solid transparent; /* optional bezel */
+  header {
+    display: flex;
+    padding: 10px 15px;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    box-shadow: 0 0 10px rgb(0 0 0 / 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
-
-  /* Top bar to mimic app chrome (optional) */
-  .topbar {
-    height:56px;
-    display:flex;
-    align-items:center;
-    gap:14px;
-    padding:12px;
-    border-bottom:1px solid rgba(0,0,0,0.06);
-    background:transparent;
+  .menu-icon {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
   }
-  .burger {
-    width:24px; height:20px; display:inline-block;
-    background:
-      linear-gradient(#ff9f6b,#ffb37a) padding-box,
-      linear-gradient(#fff,#fff) border-box;
-    border-radius:6px;
-    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.03);
-    transform: translateY(0.2px);
+  .menu-icon span {
+    display: block;
+    height: 4px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #ff916a, #ffdf75);
   }
-  .title { font-size:18px; font-weight:600; color:#222; }
-
-  /* screenshot image */
-  .screen-wrap{background: #fff;}
-  .screen {
-    display:block;
-    width:100%;
-    height:auto;        /* keep original aspect ratio */
-    object-fit:contain; /* do not crop; show full image */
-    -webkit-user-drag: none;
-    image-rendering: auto;
+  header h1 {
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0;
+    letter-spacing: 0.05em;
   }
-
-  /* small helper footer */
-  .hint{ text-align:center; padding:10px 12px; font-size:13px; color:#666 }
-  /* visible if image fails to load */
-  .err{ display:none; padding:14px; background:#222; color:#fff; font-size:13px;}
-  @media (max-width:420px){
-    .phone{ width:92vw; border-radius:20px }
-    .title{ font-size:16px }
+  .bell {
+    position: relative;
+    cursor: pointer;
+  }
+  .bell svg {
+    width: 26px;
+    height: 26px;
+    stroke: #222;
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -4px;
+    background: #ff9400;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+  }
+  main {
+    padding: 20px 15px 100px;
+  }
+  main h2 {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  /* Today's schedule cards */
+  .schedule-cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .card-schedule {
+    flex: 1;
+    background: linear-gradient(90deg, #ff7d75, #ffd777);
+    border-radius: 12px;
+    color: #4b2c21;
+    box-shadow: 0 7px 8px rgb(255 140 102 / 0.18);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 120px;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    transition: box-shadow 0.3s ease;
+  }
+  .card-schedule:hover,
+  .card-schedule:focus {
+    box-shadow: 0 10px 20px rgb(255 140 102 / 0.35);
+    outline: none;
+  }
+  .card-schedule .info {
+    padding: 15px 15px 0;
+    font-weight: 600;
+    font-size: 17px;
+  }
+  .card-schedule .sub-info {
+    font-weight: 400;
+    font-size: 14px;
+    margin: 6px 0 12px;
+  }
+  .book-icon {
+    position: absolute;
+    top: 22px;
+    right: 10px;
+    width: 55px;
+    height: 55px;
+    fill: none;
+    stroke: #987256;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+  .status {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 400;
+    background: #fff3c8;
+    padding: 4px 12px;
+    border-radius: 15px;
+    width: fit-content;
+    margin-left: 15px;
+  }
+  .status .dot {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    border-radius: 50%;
+  }
+  .status.absent .dot {
+    background: #ff625a;
+  }
+  .status.goingon .dot {
+    background: #2a2219;
+  }
+  .time-block {
+    background: #222;
+    color: #fff;
+    text-align: center;
+    font-weight: 500;
+    padding: 8px 0;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    user-select: none;
+    font-size: 14px;
+  }
+  /* Separator line */
+  .separator {
+    width: 90px;
+    height: 4px;
+    background: #b5b5b5;
+    border-radius: 0 0 6px 6px;
+    margin-bottom: 27px;
+  }
+  /* Categories section */
+  .categories-section h3 {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .categories-section p {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-weight: 400;
+    font-size: 15px;
+  }
+  /* Plus button */
+  .plus-button {
+    background: #222;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 31px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+    float: right;
+    margin-top: -38px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+  }
+  .plus-button:hover,
+  .plus-button:focus {
+    background-color: #ff743c;
+    outline: none;
+  }
+  /* Category grid container */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 460px;
+  }
+  /* Individual category cards */
+  .category-card {
+    background: #fef8e8;
+    border-radius: 11px;
+    padding: 22px 15px 16px;
+    text-align: center;
+    position: relative;
+    user-select: none;
+    box-shadow: 0 2px 6px rgb(240 160 93 / 0.11);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+  }
+  .category-card:hover,
+  .category-card:focus {
+    box-shadow: 0 10px 20px rgb(240 160 93 / 0.35);
+    outline: none;
+  }
+  /* Icons styles */
+  .category-card svg {
+    width: 48px;
+    height: 48px;
+    stroke-width: 1.8;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke: #222;
+    fill: none;
+    transition: stroke 0.3s ease;
+  }
+  /* Colored stroke variants */
+  .category-card.announce svg {
+    stroke: #ff8a66;
+  }
+  .category-card.feestatement svg {
+    stroke: #fba965;
+  }
+  .category-card.attendance svg {
+    stroke: #fc6f58;
+  }
+  .category-card.assignment svg {
+    stroke: #ff784b;
+  }
+  .category-card.results svg {
+    stroke: #ff7f4a;
+  }
+  .category-card.exams svg {
+    stroke: #fc6f58;
+  }
+  .category-card.library svg {
+    stroke: #ff724a;
+  }
+  .category-card.appointment svg {
+    stroke: #ff9a5c;
+  }
+  .category-card.events svg {
+    stroke: #ff9a5c;
+  }
+  .category-label {
+    margin-top: 12px;
+    background: #f9b572;
+    padding: 6px 15px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4b2c21;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    user-select: none;
+  }
+  /* Notification badges on cards */
+  .count-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: linear-gradient(45deg, #ff7457, #ffd675);
+    border-radius: 14px;
+    color: #4b2c21;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 3px 10px;
+    user-select: none;
+    line-height: 1.1;
+    font-family: 'Poppins', sans-serif;
+    white-space: nowrap;
+    box-shadow: 0 1.5px 4px rgb(0 0 0 / 0.09);
+  }
+  /* Bottom navigation bar */
+  nav.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    height: 60px;
+    border-top: 1px solid #ececec;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    user-select: none;
+    z-index: 10;
+  }
+  nav.bottom-nav .nav-item {
+    color: #999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px 6px;
+    transition: color 0.3s ease;
+  }
+  nav.bottom-nav .nav-item:hover,
+  nav.bottom-nav .nav-item:focus {
+    color: #ff743c;
+    outline: none;
+  }
+  nav.bottom-nav .nav-item.active {
+    color: #ff743c;
+  }
+  nav.bottom-nav .nav-item svg {
+    margin-bottom: 3px;
+    stroke-width: 2;
+    fill: none;
+    stroke: currentColor;
+    width: 24px;
+    height: 24px;
   }
 </style>
 </head>
 <body>
-
-<div class="phone" role="main" aria-label="App preview">
-  <div class="topbar" aria-hidden="true">
-    <div class="burger" title="menu"></div>
-    <div class="title">Dashboard</div>
+<header>
+  <div class="menu-icon" role="button" tabindex="0" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
-
-  <!-- actual image: put dashboard.png in same folder -->
-  <div class="screen-wrap">
-    <img id="appImg" src="./lputouch.png" alt="App screenshot" class="screen"
-         onerror="imgFail()" />
-    <div id="err" class="err" role="alert">
-      Failed to load <strong>dashboard.png</strong>.<br>
-      Check that the file is in the same folder as this HTML and named exactly <code>dashboard.png</code>.
+  <h1>Dashboard</h1>
+  <div class="bell" role="button" tabindex="0" aria-label="Notifications">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 17h16M4 17a3 3 0 0 0-1-2.618m18 2.618a3 3 0 0 1-1-2.618M8 10a4 4 0 0 1 8 0v4l4 4H4l4-4v-4z" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <div class="notification-badge">2</div>
+  </div>
+</header>
+<main role="main" aria-label="Dashboard main content">
+  <h2>Today's Schedule</h2>
+  <section class="schedule-cards" aria-label="Today's schedule cards">
+    <article class="card-schedule" id="phy109" tabindex="0" aria-label="PHY109 class from 01 to 02 PM, Absent status">
+      <div class="info">PHY109</div>
+      <div class="sub-info">55-705 : LPULive</div>
+      <svg class="book-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <path d="M10 52h44v-4H10z" />
+        <rect x="10" y="10" width="44" height="36" rx="4" ry="4" />
+        <line x1="10" y1="26" x2="54" y2="26" />
+        <path d="M26 32l-8 6v18h28V32l-8-6z" />
+      </svg>
+      <div class="status absent">
+        <span class="dot"></span>
+        <span>Absent</span>
+      </div>
+      <div class="time-block">01-02 PM</div>
+    </article>
+    <article class="card-schedule" id="cse101" tabindex="0" aria-label="CSE101 class from 02 to 03 PM, Going On status">
+      <div class="info">CSE101</div>
+      <div class="sub-info">55-403 : LPULive</div>
+      <svg class="book-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <path d="M10 52h44v-4H10z" />
+        <rect x="10" y="10" width="44" height="36" rx="4" ry="4" />
+        <line x1="10" y1="26" x2="54" y2="26" />
+        <path d="M26 32l-8 6v18h28V32l-8-6z" />
+      </svg>
+      <div class="status goingon">
+        <span class="dot"></span>
+        <span>Going On</span>
+      </div>
+      <div class="time-block">02-03 PM</div>
+    </article>
+  </section>
+  <div class="separator" aria-hidden="true"></div>
+  <section class="categories-section" aria-label="Categories">
+    <h3>Categories</h3>
+    <p>Click on the plus button to add menu grids.</p>
+    <button class="plus-button" aria-label="Add menu grids" title="Add menu grids">+</button>
+    <div class="category-grid" role="list">
+      <div class="category-card announce" role="listitem" tabindex="0" aria-label="Announce category, 10 notifications">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" >
+          <path d="M52 40v-9l9-4v-3l-9-3v-9l-4 3-3 7-9-5-9 5-2-1-4 3 2 9 16 3" />
+          <circle cx="12" cy="46" r="5" />
+          <path d="M17 46l-6-4 14-9 5 3-5 15" />
+        </svg>
+        <div class="category-label">Announce</div>
+        <div class="count-badge">10</div>
+      </div>
+      <div class="category-card feestatement" role="listitem" tabindex="0" aria-label="Fee Statement category">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" >
+          <path d="M44 26h-16l-14 8v10l14 8h22v-26z" />
+          <path d="M54 18h-18l-14 8v18" />
+        </svg>
+        <div class="category-label">Fee Statement</div>
+      </div>
+      <div class="category-card attendance" role="listitem" tabindex="0" aria-label="Attendance category, 88% attendance">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" >
+          <rect x="10" y="14" width="40" height="36" ry="5" />
+          <circle cx="32" cy="32" r="10" />
+          <path d="M24 32v10l16-8" />
+        </svg>
+        <div class="category-label">Attendance</div>
+        <div class="count-badge">88 %</div>
+      </div>
+      <div class="category-card assignment" role="listitem" tabindex="0" aria-label="Assignment category, 5 assignments">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" >
+          <rect x="16" y="12" width="28" height="40" />
+          <line x1="22" y1="22" x2="42" y2="22" />
+          <line x1="22" y1="30" x2="42" y2="30" />
+          <line x1="22" y1="38" x2="42" y2="38" />
+          <line x1="22" y1="46" x2="42" y2="46" />
+          <circle cx="26" cy="18" r="2" />
+        </svg>
+        <div class="category-label">Assignment</div>
+        <div class="count-badge">5</div>
+      </div>
+      <div class="category-card results" role="listitem" tabindex="0" aria-label="Results category, 8.00 score">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" >
+          <rect x="15" y="12" width="34" height="40" ry="4" />
+          <circle cx="32" cy="30" r="10" />
+          <line x1="22" y1="32" x2="42" y2="32" />
+        </svg>
+        <div class="category-label">Results</div>
+        <div class="count-badge">8.00</div>
+      </div>
+      <div class="category-card exams" role="listitem" tabindex="0" aria-label="Exams category, 0 exams">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" stroke="#fc6f58" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" fill="none">
+          <rect x="16" y="16" width="32" height="36" ry="3" />
+          <line x1="24" y1="30" x2="40" y2="30" />
+          <line x1="24" y1="38" x2="40" y2="38" />
+          <line x1="24" y1="46" x2="40" y2="46" />
+          <line x1="44" y1="16" x2="44" y2="10" />
+          <line x1="36" y1="16" x2="36" y2="10" />
+          <line x1="28" y1="16" x2="28" y2="10" />
+          <line x1="20" y1="50" x2="44" y2="50" />
+          <text x="26" y="26" font-size="10" font-weight="700" fill="#fc6f58">EXAM</text>
+        </svg>
+        <div class="category-label">Exams</div>
+        <div class="count-badge">0</div>
+      </div>
+      <div class="category-card library" role="listitem" tabindex="0" aria-label="Library category">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" >
+          <rect x="14" y="18" width="10" height="30" />
+          <rect x="28" y="18" width="10" height="30" />
+          <rect x="42" y="18" width="10" height="30" />
+          <line x1="14" y1="18" x2="52" y2="18" />
+          <line x1="14" y1="48" x2="52" y2="48" />
+        </svg>
+        <div class="category-label">Library</div>
+      </div>
+      <div class="category-card appointment" role="listitem" tabindex="0" aria-label="Appointment category">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" >
+          <rect x="12" y="14" width="40" height="34" ry="6" />
+          <line x1="24" y1="14" x2="24" y2="8" />
+          <line x1="40" y1="14" x2="40" y2="8" />
+          <circle cx="32" cy="34" r="8" />
+          <line x1="32" y1="34" x2="32" y2="26" />
+          <line x1="32" y1="34" x2="40" y2="34" />
+        </svg>
+        <div class="category-label">Appointment</div>
+      </div>
+      <div class="category-card events" role="listitem" tabindex="0" aria-label="Events category">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" >
+          <rect x="12" y="20" width="40" height="30" ry="6" />
+          <line x1="12" y1="24" x2="52" y2="24" />
+          <circle cx="26" cy="40" r="6" />
+          <circle cx="38" cy="40" r="6" />
+          <circle cx="32" cy="40" r="6" />
+          <path d="M21 20l10-8 10 8" stroke="#ff9a5c" stroke-width="1.6" fill="none" />
+        </svg>
+        <div class="category-label">Events</div>
+      </div>
     </div>
+  </section>
+</main>
+<nav class="bottom-nav" role="navigation" aria-label="Bottom Navigation">
+  <div class="nav-item active" tabindex="0" aria-current="page" id="nav-dashboard">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+      <path d="M3 10h18" />
+    </svg>
+    Dashboard
   </div>
-
-  <div class="hint">Tap/Click the image to dismiss popups (if any)</div>
-</div>
-
+  <div class="nav-item" tabindex="0" id="nav-happenings">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="8" y="5" width="8" height="14" ry="2" />
+      <line x1="12" y1="19" x2="12" y2="5" />
+    </svg>
+    Happenings
+  </div>
+  <div class="nav-item" tabindex="0" id="nav-rms">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M3 21v-18l18 9-18 9z" />
+      <line x1="9" y1="9" x2="15" y2="15" />
+    </svg>
+    RMS
+  </div>
+  <div class="nav-item" tabindex="0" id="nav-quiz">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <line x1="4" y1="7" x2="20" y2="7" />
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <line x1="4" y1="17" x2="20" y2="17" />
+    </svg>
+    Quick Quiz
+  </div>
+</nav>
 <script>
-  function imgFail(){
-    document.getElementById('appImg').style.display = 'none';
-    document.getElementById('err').style.display = 'block';
-    console.error('Failed to load ./dashboard.png — check filename and location.');
-  }
+  // Plus button click
+  document.querySelector('.plus-button').addEventListener('click', () => {
+    alert('Add menu grids clicked!');
+  });
 
-  // optional: dismiss window.alert-like popups if you made a clickable overlay earlier
-  // (this simply prevents accidental JS alerts if you had them)
-  window.addEventListener('click', ()=>{ try{ window.alert = () => {}; }catch(e){} });
+  // Bottom navigation items interaction
+  const navItems = document.querySelectorAll('nav.bottom-nav .nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      alert(item.textContent.trim() + ' clicked!');
+    });
+    item.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        item.click();
+      }
+    });
+  });
+
+  // Schedule cards clicks
+  const scheduleCards = document.querySelectorAll('.card-schedule');
+  scheduleCards.forEach(card => {
+    card.addEventListener('click', () => {
+      alert(card.querySelector('.info').textContent + ' schedule clicked!');
+    });
+    card.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.click();
+      }
+    });
+  });
+
+  // Category cards clicks
+  const categoryCards = document.querySelectorAll('.category-card');
+  categoryCards.forEach(card => {
+    card.addEventListener('click', () => {
+      alert(card.querySelector('.category-label').textContent + ' category clicked!');
+    });
+    card.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.click();
+      }
+    });
+  });
+  
+  // Menu icon
+  const menuIcon = document.querySelector('.menu-icon');
+  menuIcon.addEventListener('click', () => {
+    alert('Menu icon clicked!');
+  });
+  menuIcon.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      menuIcon.click();
+    }
+  });
+  
+  // Bell icon
+  const bellIcon = document.querySelector('.bell');
+  bellIcon.addEventListener('click', () => {
+    alert('Notification bell clicked!');
+  });
+  bellIcon.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      bellIcon.click();
+    }
+  });
 </script>
 </body>
 </html>
