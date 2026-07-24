@@ -1,0 +1,85 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    background:#000;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:100vh;
+
+}
+
+.screen{
+
+    position:relative;
+
+    width:100%;
+    max-width:720px;
+
+}
+
+.screen img{
+
+    width:100%;
+    display:block;
+
+}
+
+/* Invisible Buttons */
+
+button{
+
+    position:absolute;
+
+    border:none;
+
+    background:transparent;
+
+    cursor:pointer;
+
+}
+
+/* Breakfast */
+
+.breakfast{
+
+    left:11.5%;
+    top:80.9%;
+
+    width:36.2%;
+    height:6.9%;
+
+}
+
+/* Lunch */
+
+.lunch{
+
+    left:52.2%;
+    top:80.9%;
+
+    width:36.2%;
+    height:6.9%;
+
+}
+
+/* Dinner */
+
+.dinner{
+
+    left:11.5%;
+    top:91.7%;
+
+    width:36.2%;
+    height:6.9%;
+
+}
