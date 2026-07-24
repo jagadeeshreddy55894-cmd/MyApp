@@ -2,288 +2,705 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dashboard - Demo</title>
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1,
+maximum-scale=1,
+minimum-scale=1,
+user-scalable=no,
+viewport-fit=cover"/>
+
+<title>LPU Touch</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 :root{
-  --accent1:#ff8a6b;
-  --accent2:#ffd27a;
-  --bg:#f5f1ee;
-  --card:#fff;
-  --muted:#8f8f8f;
-  --dark:#222;
+--accent1:#ff8a6b;
+--accent2:#ffd27a;
+--bg:#000;
+--card:#fff;
+--muted:#8f8f8f;
+--dark:#222;
 }
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;background:var(--bg);font-family:"Poppins",system-ui,Arial;-webkit-font-smoothing:antialiased}
-a{color:inherit}
 
-/* topbar: reduced height */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+width:100%;
+height:100%;
+overflow:hidden;
+background:#000;
+font-family:"Poppins",sans-serif;
+touch-action:none;
+-webkit-user-select:none;
+user-select:none;
+}
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
+/* ---------- TOP BAR ---------- */
+
 .topbar{
-  position:fixed; top:0; left:0; right:0;
-  height:48px; background:#fff;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:6px 12px; z-index:80;
-  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+position:fixed;
+top:0;
+left:0;
+right:0;
+height:48px;
+background:#fff;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:6px 12px;
+z-index:100;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
-.menu-btn{ width:36px;height:36px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;background:linear-gradient(90deg,var(--accent1),var(--accent2));
-}
-.menu-btn .bars{width:16px;height:11px;position:relative}
-.menu-btn .bars:before,.menu-btn .bars:after,.menu-btn .bars div{
-  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px;
-}
-.menu-btn .bars:before{top:0}
-.menu-btn .bars div{top:4.5px}
-.menu-btn .bars:after{bottom:0}
 
-.topbar .title{font-weight:600;font-size:16px;color:var(--dark)}
-.notif{position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.notif img{width:22px;height:22px}
-.notif .badge{position:absolute;top:-6px;right:-6px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:700}
+.menu-btn{
+width:36px;
+height:36px;
+border-radius:8px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+background:linear-gradient(90deg,var(--accent1),var(--accent2));
+}
 
-/* frame: reduce padding to match screenshot */
+.menu-btn .bars{
+width:16px;
+height:12px;
+position:relative;
+}
+
+.menu-btn .bars::before,
+.menu-btn .bars::after,
+.menu-btn .bars div{
+content:"";
+position:absolute;
+left:0;
+right:0;
+height:2px;
+background:#fff;
+border-radius:3px;
+}
+
+.menu-btn .bars::before{
+top:0;
+}
+
+.menu-btn .bars div{
+top:5px;
+}
+
+.menu-btn .bars::after{
+bottom:0;
+}
+
+.title{
+font-size:16px;
+font-weight:600;
+color:#222;
+}
+
+/* ---------- IMAGE ---------- */
+
 .frame{
-  position: absolute;
-  top:48px; left:0; right:0; bottom:64px; /* leave space for bottom nav */
-  overflow:auto; display:flex; justify-content:center;
-  padding:8px 8px 12px 8px;
+
+position:fixed;
+
+top:0;
+left:0;
+right:0;
+bottom:0;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+overflow:hidden;
+
+background:#000;
+
 }
 
-/* content width wider so less side gaps */
 .content-wrap{
-  max-width:980px; width:100%;
-  padding:0 6px;
+
+width:100%;
+height:100%;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
 }
 
-/* screenshot image as the main UI */
 .screenshot{
-  width:100%; height:auto; display:block; object-fit:cover; border-radius:10px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.06);
-}
 
-/* compact bottom navigation */
+display:block;
+
+height:100vh;
+width:auto;
+
+max-width:100vw;
+
+object-fit:contain;
+
+border-radius:0;
+
+box-shadow:none;
+
+pointer-events:none;
+
+}
+/* ---------- BOTTOM NAV ---------- */
+
 .bottom-nav{
-  position:fixed; left:12px; right:12px; bottom:12px; height:56px;
-  background:#fff;border-radius:14px; display:flex; align-items:center; justify-content:space-around;
-  box-shadow:0 12px 28px rgba(0,0,0,0.12); z-index:75;
+
+position:fixed;
+
+left:12px;
+right:12px;
+bottom:12px;
+
+height:56px;
+
+background:#fff;
+
+border-radius:14px;
+
+display:flex;
+justify-content:space-around;
+align-items:center;
+
+box-shadow:0 12px 30px rgba(0,0,0,.15);
+
+z-index:80;
+
 }
-.nav-item{display:flex;flex-direction:column;align-items:center;font-size:12px;color:#b76a45;text-decoration:none}
-.nav-item .ico{font-size:18px;margin-bottom:4px}
-.nav-item.active{color:var(--accent1);font-weight:600}
 
-/* drawer overlay & panel */
-.drawer-overlay{position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.28); display:none; z-index:95}
-.drawer{position:fixed; left:0; top:0; bottom:0; width:340px; max-width:86%; background:transparent; transform:translateX(-110%); transition:transform .28s cubic-bezier(.2,.9,.3,1); z-index:100; display:flex; flex-direction:column;}
-.drawer-inner{background:var(--card); height:100%; box-shadow:0 12px 36px rgba(0,0,0,0.16); border-top-right-radius:14px; border-bottom-right-radius:14px; overflow:hidden; display:flex; flex-direction:column;}
+.nav-item{
 
-/* drawer head */
-.drawer-head{padding:18px; background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#111; display:flex; flex-direction:column; gap:10px; align-items:center;}
-.avatar{width:86px;height:86px;border-radius:50%;background:#fff;border:6px solid rgba(255,255,255,0.85);overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;color:#333;box-shadow:0 10px 24px rgba(0,0,0,0.16)}
-.user-name{font-weight:700;font-size:17px;text-align:center;color:#111}
-.user-id{font-size:13px;color:#111;opacity:.95}
-.user-deg{font-size:13px;color:rgba(0,0,0,0.85); text-align:center; opacity:.95}
+display:flex;
+flex-direction:column;
+align-items:center;
 
-/* search */
-.search-wrap{padding:12px 14px;background:transparent}
-.search-row{display:flex;gap:8px;align-items:center}
-.search{flex:1;padding:12px;border-radius:18px;border:0;background:#fff;font-size:14px;color:#333;outline:none;box-shadow:0 6px 14px rgba(12,12,12,0.06)}
-.magnifier{width:36px;height:36px;border-radius:10px;background:#fff;border:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--muted)}
+font-size:12px;
 
-/* menu list and items */
-.menu-list{flex:1; overflow:auto; padding:6px 0}
-.item{display:flex; gap:14px; align-items:center; padding:14px 18px; cursor:pointer; border-bottom:1px solid rgba(0,0,0,0.04); background:transparent}
-.item:hover{background:linear-gradient(90deg, rgba(255,240,235,0.6), rgba(255,250,240,0.3))}
-.ic{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid rgba(0,0,0,0.04);box-shadow:0 8px 18px rgba(0,0,0,0.05)}
-.label{font-size:16px;color:var(--dark);flex:1;font-weight:600}
+color:#b76a45;
 
-/* primary style */
-.item.primary .ic{background:linear-gradient(120deg,var(--accent1),var(--accent2)); color:#fff}
-.item.primary .label{font-weight:700;color:#111}
-
-/* logout */
-.drawer-foot{padding:18px;background:transparent}
-.logout{width:100%; padding:12px;border-radius:999px;border:none;font-weight:700;background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; font-size:15px; cursor:pointer; box-shadow:0 10px 28px rgba(0,0,0,0.14)}
-
-/* drawer show state */
-.drawer-open .drawer{transform:translateX(0)}
-.drawer-open .drawer-overlay{display:block}
-
-/* Mess panel */
-.panel{position:fixed; right:18px; bottom:84px; left:auto; width:320px; max-width:86%; background:#fff;border-radius:12px;padding:14px;box-shadow:0 16px 40px rgba(0,0,0,0.18); z-index:85; display:none; transform:translateY(10px); transition:all .18s ease;}
-.panel.show{display:block; transform:translateY(0)}
-.panel h4{margin:0 0 8px 0;font-size:16px}
-.panel p{color:var(--muted);margin:0;font-size:14px}
-
-/* adjust for small screens */
-@media (max-width:420px){
-  .drawer{width:86%}
-  .screenshot{max-width:420px}
-  .bottom-nav{left:10px;right:10px}
 }
+
+.nav-item .ico{
+
+font-size:18px;
+
+margin-bottom:4px;
+
+}
+
+.nav-item.active{
+
+color:var(--accent1);
+
+font-weight:600;
+
+}
+
+/* ---------- DRAWER ---------- */
+
+.drawer-overlay{
+
+position:fixed;
+
+left:0;
+right:0;
+top:0;
+bottom:0;
+
+background:rgba(0,0,0,.30);
+
+display:none;
+
+z-index:95;
+
+}
+
+.drawer{
+
+position:fixed;
+
+left:0;
+top:0;
+bottom:0;
+
+width:340px;
+
+max-width:86%;
+
+transform:translateX(-110%);
+
+transition:.30s;
+
+z-index:100;
+
+display:flex;
+
+}
+
+.drawer-inner{
+
+width:100%;
+
+background:#fff;
+
+display:flex;
+
+flex-direction:column;
+
+overflow:hidden;
+
+border-top-right-radius:18px;
+
+border-bottom-right-radius:18px;
+
+}
+
+.drawer-head{
+
+padding:20px;
+
+background:linear-gradient(90deg,var(--accent1),var(--accent2));
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+gap:10px;
+
+}
+
+.avatar{
+
+width:85px;
+
+height:85px;
+
+border-radius:50%;
+
+overflow:hidden;
+
+background:#fff;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-weight:bold;
+
+font-size:22px;
+
+}
+
+.user-name{
+
+font-weight:700;
+
+font-size:17px;
+
+text-align:center;
+
+}
+
+.user-id{
+
+font-size:13px;
+
+}
+
+.user-deg{
+
+font-size:13px;
+
+text-align:center;
+
+}
+
+.search-wrap{
+
+padding:14px;
+
+}
+
+.search-row{
+
+display:flex;
+
+gap:8px;
+
+}
+
+.search{
+
+flex:1;
+
+padding:12px;
+
+border:none;
+
+outline:none;
+
+border-radius:20px;
+
+background:#f5f5f5;
+
+font-size:14px;
+
+}
+
+.magnifier{
+
+width:40px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:18px;
+
+}
+
+.menu-list{
+
+flex:1;
+
+overflow:auto;
+
+}
+
+.item{
+
+display:flex;
+
+align-items:center;
+
+gap:14px;
+
+padding:15px 18px;
+
+cursor:pointer;
+
+border-bottom:1px solid #eee;
+
+}
+
+.ic{
+
+width:45px;
+
+height:45px;
+
+border-radius:10px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:#fff5ef;
+
+font-size:20px;
+
+}
+
+.label{
+
+font-size:15px;
+
+font-weight:600;
+
+}
+
+.drawer-foot{
+
+padding:18px;
+
+}
+
+.logout{
+
+width:100%;
+
+padding:12px;
+
+border:none;
+
+border-radius:50px;
+
+background:linear-gradient(90deg,var(--accent1),var(--accent2));
+
+color:#fff;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+.drawer-open .drawer{
+
+transform:translateX(0);
+
+}
+
+.drawer-open .drawer-overlay{
+
+display:block;
+
+}
+
 </style>
+
 </head>
+
 <body>
 
-  <!-- topbar -->
-  <div class="topbar">
-    <div style="display:flex;align-items:center;gap:12px">
-      <div class="menu-btn" id="menuOpen" title="Open menu">
-        <div class="bars"><div></div></div>
-      </div>
-    </div>
+<div class="topbar">
 
-    <div class="title">Dashboard</div>
+<div class="menu-btn" id="menuOpen">
 
-    <div style="display:flex;align-items:center;gap:8px">
-      <div class="notif" id="notifBtn" title="Notifications">
-        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png" alt="bell">
-        <div class="badge">34</div>
-      </div>
-    </div>
-  </div>
+<div class="bars"><div></div></div>
 
-  <!-- main scrolling frame -->
-  <div class="frame">
-    <div class="content-wrap" id="mainContent">
-      <!-- Use the screenshot file you named: lputouches.png -->
-      <img src="lputouches.png" class="screenshot" alt="App screenshot">
-    </div>
-  </div>
+</div>
 
-  <!-- bottom nav -->
-  <nav class="bottom-nav" role="navigation" aria-label="Main">
-    <a class="nav-item active" href="#"><div class="ico">▦</div><div>Dashboard</div></a>
-    <a class="nav-item" href="#"><div class="ico">📰</div><div>Happenings</div></a>
-    <a class="nav-item" href="#"><div class="ico">✎</div><div>RMS</div></a>
-    <a class="nav-item" href="#"><div class="ico">≡</div><div>Quick Quiz</div></a>
-  </nav>
+<div class="title">
 
-  <!-- Mess panel -->
-  <div class="panel" id="messPanel">
-    <h4>Mess Food Scanner</h4>
-    <p>Scanner demo: replace this with actual scanner/camera integration when ready.</p>
-  </div>
+Dashboard
 
-  <!-- drawer overlay & drawer -->
-  <div class="drawer-overlay" id="overlay"></div>
-  <div class="drawer" id="drawer">
-    <div class="drawer-inner">
-      <div class="drawer-head">
-        <div class="avatar" id="avatarHolder">MG</div>
-        <div class="user-name" id="uName">Mallidi Gana Jagadeesh Reddy</div>
-        <div class="user-id">12311248</div>
-        <div class="user-deg">P132:B.Tech. (Computer Science and Engineering)(2023)</div>
-      </div>
+</div>
 
-      <div class="search-wrap">
-        <div class="search-row">
-          <div class="magnifier">🔍</div>
-          <input class="search" id="searchInput" placeholder="Search">
-        </div>
-      </div>
+<div></div>
 
-      <div class="menu-list" id="menuList">
-        <div class="item primary" data-key="mess">
-          <div class="ic">🍽️</div>
-          <div class="label">Mess Food Scanner</div>
-        </div>
-        <div class="item"><div class="ic">📁</div><div class="label">Mentor Meeting Details</div></div>
-        <div class="item"><div class="ic">🍛</div><div class="label">Mess Food Scanner (duplicate)</div></div>
-        <div class="item"><div class="ic">📝</div><div class="label">Open Minor Area Preference</div></div>
-        <div class="item"><div class="ic">📌</div><div class="label">PEP Activities</div></div>
-        <div class="item"><div class="ic">🔳</div><div class="label">Placement Barcode Scanner</div></div>
-        <div class="item"><div class="ic">📣</div><div class="label">Placement Drive</div></div>
-        <div class="item"><div class="ic">📊</div><div class="label">Placement Drive Summary</div></div>
-        <div class="item"><div class="ic">🚆</div><div class="label">Railway Concession Form</div></div>
-        <div class="item"><div class="ic">♻️</div><div class="label">ReAppear Registration</div></div>
-        <div class="item"><div class="ic">📄</div><div class="label">Document Upload</div></div>
-        <div class="item"><div class="ic">🩺</div><div class="label">Doctor Appointment</div></div>
-      </div>
+</div>
 
-      <div class="drawer-foot">
-        <button class="logout" id="logoutBtn">LOGOUT ⎘</button>
-      </div>
-    </div>
-  </div>
+<div class="frame">
+
+<div class="content-wrap">
+
+<img src="lputouches.png" class="screenshot">
+
+</div>
+
+</div>
+
+<nav class="bottom-nav">
+
+<a class="nav-item active">
+
+<div class="ico">▦</div>
+
+<div>Dashboard</div>
+
+</a>
+
+<a class="nav-item">
+
+<div class="ico">📰</div>
+
+<div>Happenings</div>
+
+</a>
+
+<a class="nav-item">
+
+<div class="ico">✎</div>
+
+<div>RMS</div>
+
+</a>
+
+<a class="nav-item">
+
+<div class="ico">≡</div>
+
+<div>Quick Quiz</div>
+
+</a>
+
+</nav>
+<div class="drawer-overlay" id="overlay"></div>
+
+<div class="drawer" id="drawer">
+
+<div class="drawer-inner">
+
+<div class="drawer-head">
+
+<div class="avatar" id="avatarHolder">
+MG
+</div>
+
+<div class="user-name">
+Mallidi Gana Jagadeesh Reddy
+</div>
+
+<div class="user-id">
+12311248
+</div>
+
+<div class="user-deg">
+P132:B.Tech. (Computer Science and Engineering)(2023)
+</div>
+
+</div>
+
+<div class="search-wrap">
+
+<div class="search-row">
+
+<div class="magnifier">🔍</div>
+
+<input
+class="search"
+id="searchInput"
+placeholder="Search">
+
+</div>
+
+</div>
+
+<div class="menu-list" id="menuList">
+
+<div class="item">
+<div class="ic">🍽️</div>
+<div class="label">Mess Food Scanner</div>
+</div>
+
+<div class="item">
+<div class="ic">📁</div>
+<div class="label">Mentor Meeting Details</div>
+</div>
+
+<div class="item">
+<div class="ic">📌</div>
+<div class="label">PEP Activities</div>
+</div>
+
+<div class="item">
+<div class="ic">📣</div>
+<div class="label">Placement Drive</div>
+</div>
+
+<div class="item">
+<div class="ic">📊</div>
+<div class="label">Placement Drive Summary</div>
+</div>
+
+<div class="item">
+<div class="ic">🚆</div>
+<div class="label">Railway Concession Form</div>
+</div>
+
+<div class="item">
+<div class="ic">📄</div>
+<div class="label">Document Upload</div>
+</div>
+
+<div class="item">
+<div class="ic">🩺</div>
+<div class="label">Doctor Appointment</div>
+</div>
+
+</div>
+
+<div class="drawer-foot">
+
+<button class="logout">
+
+LOGOUT
+
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 <script>
-const body = document.body;
-const menuOpen = document.getElementById('menuOpen');
-const overlay = document.getElementById('overlay');
-const drawer = document.getElementById('drawer');
-const avatar = document.getElementById('avatarHolder');
-const messPanel = document.getElementById('messPanel');
 
-function openDrawer(){ body.classList.add('drawer-open'); drawer.style.transform='translateX(0)'; overlay.style.display='block'; }
-function closeDrawer(){ body.classList.remove('drawer-open'); drawer.style.transform=''; overlay.style.display='none'; hideMessPanel(); }
+const body=document.body;
 
-menuOpen.addEventListener('click', openDrawer);
-overlay.addEventListener('click', closeDrawer);
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeDrawer(); });
+const menu=document.getElementById("menuOpen");
 
-// try load avatar images (try lputouches.png first)
-(function loadAvatar(){
-  const tryNames = ['lputouches.png','avatar.png','lputouches.JPG','lputouches.jpg'];
-  let loaded=false;
-  tryNames.forEach(n=>{
-    if(loaded) return;
-    const i=new Image();
-    i.src=n;
-    i.onload=function(){
-      if(loaded) return;
-      avatar.innerHTML='';
-      i.style.width='100%'; i.style.height='100%'; i.style.objectFit='cover';
-      avatar.appendChild(i);
-      loaded=true;
-    };
-  });
-  if(!loaded){
-    const nm=document.getElementById('uName').textContent||'User';
-    const parts=nm.trim().split(' ');
-    const initials=(parts[0]?parts[0][0]:'U')+(parts[1]?parts[1][0]:'');
-    avatar.textContent=initials.toUpperCase();
-    avatar.style.background='#fff';
-  }
-})();
+const drawer=document.getElementById("drawer");
 
-// menu list handling
-document.getElementById('menuList').addEventListener('click', function(e){
-  const item=e.target.closest('.item');
-  if(!item) return;
-  const key=item.dataset.key || item.querySelector('.label').textContent.trim();
-  if(key==='mess' || key.toLowerCase().includes('mess food scanner')){
-    toggleMessPanel(); return;
-  }
-  const label=item.querySelector('.label').textContent.trim();
-  console.log('Menu click:',label);
-  closeDrawer();
+const overlay=document.getElementById("overlay");
+
+menu.onclick=function(){
+
+body.classList.add("drawer-open");
+
+};
+
+overlay.onclick=function(){
+
+body.classList.remove("drawer-open");
+
+};
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape")
+
+body.classList.remove("drawer-open");
+
 });
 
-function toggleMessPanel(){ if(messPanel.classList.contains('show')) hideMessPanel(); else messPanel.classList.add('show'); }
-function hideMessPanel(){ messPanel.classList.remove('show'); }
+const search=document.getElementById("searchInput");
 
-document.addEventListener('click', function(ev){
-  const p=ev.target;
-  if(messPanel.classList.contains('show') && !messPanel.contains(p) && !p.closest('.item[data-key="mess"]')){
-    hideMessPanel();
-  }
+search.addEventListener("input",function(){
+
+let value=this.value.toLowerCase();
+
+document.querySelectorAll(".menu-list .item").forEach(function(item){
+
+let txt=item.innerText.toLowerCase();
+
+item.style.display=txt.includes(value)?"flex":"none";
+
 });
 
-document.getElementById('logoutBtn').addEventListener('click', function(){ if(confirm('Sign out?')) location.reload(); });
-
-const search = document.getElementById('searchInput');
-search.addEventListener('input', function(){
-  const q=this.value.toLowerCase();
-  const items=document.querySelectorAll('#menuList .item');
-  items.forEach(it=>{
-    const txt=it.querySelector('.label').textContent.toLowerCase();
-    it.style.display = txt.includes(q) ? '' : 'none';
-  });
 });
+
+document.querySelector(".logout").onclick=function(){
+
+if(confirm("Sign out?"))
+
+location.reload();
+
+};
+
 </script>
+
 </body>
+
 </html>
