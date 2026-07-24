@@ -1,705 +1,170 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<meta name="viewport"
-content="width=device-width,
-initial-scale=1,
-maximum-scale=1,
-minimum-scale=1,
-user-scalable=no,
-viewport-fit=cover"/>
+    <title>Hostel Attendance</title>
 
-<title>LPU Touch</title>
+    <link rel="stylesheet" href="stylish.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-<style>
-
-:root{
---accent1:#ff8a6b;
---accent2:#ffd27a;
---bg:#000;
---card:#fff;
---muted:#8f8f8f;
---dark:#222;
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
--webkit-tap-highlight-color:transparent;
-}
-
-html,
-body{
-width:100%;
-height:100%;
-overflow:hidden;
-background:#000;
-font-family:"Poppins",sans-serif;
-touch-action:none;
--webkit-user-select:none;
-user-select:none;
-}
-
-a{
-text-decoration:none;
-color:inherit;
-}
-
-/* ---------- TOP BAR ---------- */
-
-.topbar{
-position:fixed;
-top:0;
-left:0;
-right:0;
-height:48px;
-background:#fff;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:6px 12px;
-z-index:100;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.menu-btn{
-width:36px;
-height:36px;
-border-radius:8px;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-background:linear-gradient(90deg,var(--accent1),var(--accent2));
-}
-
-.menu-btn .bars{
-width:16px;
-height:12px;
-position:relative;
-}
-
-.menu-btn .bars::before,
-.menu-btn .bars::after,
-.menu-btn .bars div{
-content:"";
-position:absolute;
-left:0;
-right:0;
-height:2px;
-background:#fff;
-border-radius:3px;
-}
-
-.menu-btn .bars::before{
-top:0;
-}
-
-.menu-btn .bars div{
-top:5px;
-}
-
-.menu-btn .bars::after{
-bottom:0;
-}
-
-.title{
-font-size:16px;
-font-weight:600;
-color:#222;
-}
-
-/* ---------- IMAGE ---------- */
-
-.frame{
-
-position:fixed;
-
-top:0;
-left:0;
-right:0;
-bottom:0;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-overflow:hidden;
-
-background:#000;
-
-}
-
-.content-wrap{
-
-width:100%;
-height:100%;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-}
-
-.screenshot{
-
-display:block;
-
-height:100vh;
-width:auto;
-
-max-width:100vw;
-
-object-fit:contain;
-
-border-radius:0;
-
-box-shadow:none;
-
-pointer-events:none;
-
-}
-/* ---------- BOTTOM NAV ---------- */
-
-.bottom-nav{
-
-position:fixed;
-
-left:12px;
-right:12px;
-bottom:12px;
-
-height:56px;
-
-background:#fff;
-
-border-radius:14px;
-
-display:flex;
-justify-content:space-around;
-align-items:center;
-
-box-shadow:0 12px 30px rgba(0,0,0,.15);
-
-z-index:80;
-
-}
-
-.nav-item{
-
-display:flex;
-flex-direction:column;
-align-items:center;
-
-font-size:12px;
-
-color:#b76a45;
-
-}
-
-.nav-item .ico{
-
-font-size:18px;
-
-margin-bottom:4px;
-
-}
-
-.nav-item.active{
-
-color:var(--accent1);
-
-font-weight:600;
-
-}
-
-/* ---------- DRAWER ---------- */
-
-.drawer-overlay{
-
-position:fixed;
-
-left:0;
-right:0;
-top:0;
-bottom:0;
-
-background:rgba(0,0,0,.30);
-
-display:none;
-
-z-index:95;
-
-}
-
-.drawer{
-
-position:fixed;
-
-left:0;
-top:0;
-bottom:0;
-
-width:340px;
-
-max-width:86%;
-
-transform:translateX(-110%);
-
-transition:.30s;
-
-z-index:100;
-
-display:flex;
-
-}
-
-.drawer-inner{
-
-width:100%;
-
-background:#fff;
-
-display:flex;
-
-flex-direction:column;
-
-overflow:hidden;
-
-border-top-right-radius:18px;
-
-border-bottom-right-radius:18px;
-
-}
-
-.drawer-head{
-
-padding:20px;
-
-background:linear-gradient(90deg,var(--accent1),var(--accent2));
-
-display:flex;
-
-flex-direction:column;
-
-align-items:center;
-
-gap:10px;
-
-}
-
-.avatar{
-
-width:85px;
-
-height:85px;
-
-border-radius:50%;
-
-overflow:hidden;
-
-background:#fff;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-font-weight:bold;
-
-font-size:22px;
-
-}
-
-.user-name{
-
-font-weight:700;
-
-font-size:17px;
-
-text-align:center;
-
-}
-
-.user-id{
-
-font-size:13px;
-
-}
-
-.user-deg{
-
-font-size:13px;
-
-text-align:center;
-
-}
-
-.search-wrap{
-
-padding:14px;
-
-}
-
-.search-row{
-
-display:flex;
-
-gap:8px;
-
-}
-
-.search{
-
-flex:1;
-
-padding:12px;
-
-border:none;
-
-outline:none;
-
-border-radius:20px;
-
-background:#f5f5f5;
-
-font-size:14px;
-
-}
-
-.magnifier{
-
-width:40px;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-font-size:18px;
-
-}
-
-.menu-list{
-
-flex:1;
-
-overflow:auto;
-
-}
-
-.item{
-
-display:flex;
-
-align-items:center;
-
-gap:14px;
-
-padding:15px 18px;
-
-cursor:pointer;
-
-border-bottom:1px solid #eee;
-
-}
-
-.ic{
-
-width:45px;
-
-height:45px;
-
-border-radius:10px;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-background:#fff5ef;
-
-font-size:20px;
-
-}
-
-.label{
-
-font-size:15px;
-
-font-weight:600;
-
-}
-
-.drawer-foot{
-
-padding:18px;
-
-}
-
-.logout{
-
-width:100%;
-
-padding:12px;
-
-border:none;
-
-border-radius:50px;
-
-background:linear-gradient(90deg,var(--accent1),var(--accent2));
-
-color:#fff;
-
-font-weight:bold;
-
-cursor:pointer;
-
-}
-
-.drawer-open .drawer{
-
-transform:translateX(0);
-
-}
-
-.drawer-open .drawer-overlay{
-
-display:block;
-
-}
-
-</style>
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
 
-<div class="topbar">
+    <!-- Top Bar -->
 
-<div class="menu-btn" id="menuOpen">
+    <header class="topbar">
 
-<div class="bars"><div></div></div>
+        <div class="left">
 
-</div>
+            <span class="material-icons back">
+                arrow_back
+            </span>
 
-<div class="title">
+        </div>
 
-Dashboard
+        <div class="center">
+            Hostel Attendance
+        </div>
 
-</div>
+        <div class="right">
+            History
+        </div>
 
-<div></div>
+    </header>
 
-</div>
+    <!-- Main -->
 
-<div class="frame">
+    <main class="page">
 
-<div class="content-wrap">
+        <section class="card">
 
-<img src="lputouches.png" class="screenshot">
+            <div class="image-box">
 
-</div>
+                <!-- Replace this image -->
+                <img src="student.jpg" alt="Student">
 
-</div>
+            </div>
 
-<nav class="bottom-nav">
+            <h2 class="student-name">
+                JAGADEESH REDDY
+            </h2>
 
-<a class="nav-item active">
+            <div class="info">
 
-<div class="ico">▦</div>
+                <div class="row">
 
-<div>Dashboard</div>
+                    <div class="label">
+                        Registration Number
+                    </div>
 
-</a>
+                    <div class="value">
+                        12319086
+                    </div>
 
-<a class="nav-item">
+                </div>
 
-<div class="ico">📰</div>
+                <div class="row">
 
-<div>Happenings</div>
+                    <div class="label">
+                        Block
+                    </div>
 
-</a>
+                    <div class="value">
+                        BH-4
+                    </div>
 
-<a class="nav-item">
+                </div>
 
-<div class="ico">✎</div>
+                <div class="row">
 
-<div>RMS</div>
+                    <div class="label">
+                        Room Number
+                    </div>
 
-</a>
+                    <div class="value">
+                        321
+                    </div>
 
-<a class="nav-item">
+                </div>
 
-<div class="ico">≡</div>
+                <div class="row">
 
-<div>Quick Quiz</div>
+                    <div class="label">
+                        Date
+                    </div>
 
-</a>
+                    <div class="value">
+                        24 Jul 2026
+                    </div>
 
-</nav>
-<div class="drawer-overlay" id="overlay"></div>
+                </div>
 
-<div class="drawer" id="drawer">
+                <div class="row">
 
-<div class="drawer-inner">
+                    <div class="label">
+                        Time
+                    </div>
 
-<div class="drawer-head">
+                    <div class="value">
+                        08:30 PM
+                    </div>
 
-<div class="avatar" id="avatarHolder">
-MG
-</div>
+                </div>
 
-<div class="user-name">
-Mallidi Gana Jagadeesh Reddy
-</div>
+            </div>
 
-<div class="user-id">
-12311248
-</div>
+            <div class="instruction">
 
-<div class="user-deg">
-P132:B.Tech. (Computer Science and Engineering)(2023)
-</div>
+                Kindly click on the<br>
+                desired meal to<br>
+                mark attendance
 
-</div>
+            </div>
+            <!-- Meal Buttons -->
 
-<div class="search-wrap">
+            <div class="meal-container">
 
-<div class="search-row">
+                <button class="meal-btn">
 
-<div class="magnifier">🔍</div>
+                    <span>Breakfast</span>
 
-<input
-class="search"
-id="searchInput"
-placeholder="Search">
+                    <span class="material-icons">
+                        keyboard_arrow_right
+                    </span>
 
-</div>
+                </button>
 
-</div>
+                <button class="meal-btn">
 
-<div class="menu-list" id="menuList">
+                    <span>Lunch</span>
 
-<div class="item">
-<div class="ic">🍽️</div>
-<div class="label">Mess Food Scanner</div>
-</div>
+                    <span class="material-icons">
+                        keyboard_arrow_right
+                    </span>
 
-<div class="item">
-<div class="ic">📁</div>
-<div class="label">Mentor Meeting Details</div>
-</div>
+                </button>
 
-<div class="item">
-<div class="ic">📌</div>
-<div class="label">PEP Activities</div>
-</div>
+                <button class="meal-btn dinner">
 
-<div class="item">
-<div class="ic">📣</div>
-<div class="label">Placement Drive</div>
-</div>
+                    <span>Dinner</span>
 
-<div class="item">
-<div class="ic">📊</div>
-<div class="label">Placement Drive Summary</div>
-</div>
+                    <span class="material-icons">
+                        keyboard_arrow_right
+                    </span>
 
-<div class="item">
-<div class="ic">🚆</div>
-<div class="label">Railway Concession Form</div>
-</div>
+                </button>
 
-<div class="item">
-<div class="ic">📄</div>
-<div class="label">Document Upload</div>
-</div>
+            </div>
 
-<div class="item">
-<div class="ic">🩺</div>
-<div class="label">Doctor Appointment</div>
-</div>
+        </section>
 
-</div>
-
-<div class="drawer-foot">
-
-<button class="logout">
-
-LOGOUT
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<script>
-
-const body=document.body;
-
-const menu=document.getElementById("menuOpen");
-
-const drawer=document.getElementById("drawer");
-
-const overlay=document.getElementById("overlay");
-
-menu.onclick=function(){
-
-body.classList.add("drawer-open");
-
-};
-
-overlay.onclick=function(){
-
-body.classList.remove("drawer-open");
-
-};
-
-document.addEventListener("keydown",function(e){
-
-if(e.key==="Escape")
-
-body.classList.remove("drawer-open");
-
-});
-
-const search=document.getElementById("searchInput");
-
-search.addEventListener("input",function(){
-
-let value=this.value.toLowerCase();
-
-document.querySelectorAll(".menu-list .item").forEach(function(item){
-
-let txt=item.innerText.toLowerCase();
-
-item.style.display=txt.includes(value)?"flex":"none";
-
-});
-
-});
-
-document.querySelector(".logout").onclick=function(){
-
-if(confirm("Sign out?"))
-
-location.reload();
-
-};
-
-</script>
+    </main>
 
 </body>
 
